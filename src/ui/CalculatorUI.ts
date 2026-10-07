@@ -18,6 +18,7 @@ export class CalclatorUI {
 
     this.attachEventListener();
     this.updateDisplay();
+    this.handleInfinity();
   }
 
   private attachEventListener(): void {
@@ -58,6 +59,18 @@ export class CalclatorUI {
     }
 
     this.updateDisplay();
+    this.handleInfinity();
+  }
+
+  private handleInfinity(): void {
+    if (this.calculator.getDisplayValue() !== "Infinity") {
+      return;
+    }
+
+    setTimeout(() => {
+      this.calculator.clear();
+      this.updateDisplay();
+    }, 700);
   }
 
   private playSound(): void {

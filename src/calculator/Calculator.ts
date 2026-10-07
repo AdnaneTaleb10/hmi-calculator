@@ -27,53 +27,83 @@ export class Calclator {
   }
 
   public setOperator(operator: Operator): void {
-    if (this.firstOperand !== "" && this.secondOperand === "") {
+    if (this.firstOperand !== "" && this.operator === null) {
+      this.operator = operator;
+      return;
+    }
+
+    if (
+      this.firstOperand !== "" &&
+      this.operator !== null &&
+      this.secondOperand !== ""
+    ) {
+      this.calculate();
+
+      if (this.result === "Infinity") {
+        return;
+      }
+
+      this.firstOperand = this.result;
+      this.secondOperand = "";
+      this.result = "";
       this.operator = operator;
     }
   }
 
   public calculate(): string {
-    // If there is only one operand:
-    if (this.firstOperand !== "" && this.operator === null) {
-      this.result = this.firstOperand;
-      return this.result;
-    }
-
     if (
       this.firstOperand === "" ||
       this.operator === null ||
       this.secondOperand === ""
     ) {
+      if (this.firstOperand !== "" && this.operator === null) {
+        this.result = this.firstOperand;
+        return this.result;
+      }
+
       return "Error";
     }
 
     const first = parseFloat(this.firstOperand);
     const second = parseFloat(this.secondOperand);
 
+    let calculation: number;
+
     switch (this.operator) {
       case "+":
-        this.result = String(first + second);
+        calculation = first + second;
         break;
 
       case "-":
-        this.result = String(first - second);
+        calculation = first - second;
         break;
 
       case "*":
-        this.result = String(first * second);
+        calculation = first * second;
         break;
 
       case "/":
         if (second === 0) {
-          this.result = "Cannot divide by zero";
+          this.result = "Infinity";
           return this.result;
         }
 
-        this.result = String(first / second);
+        calculation = first / second;
         break;
+
+      default:
+        return "Error";
     }
 
+    this.result = this.formatResult(calculation);
+
     return this.result;
+  }
+
+  private formatResult(value: number): string {
+    return Number.isInteger(value)
+      ? String(value)
+      : parseFloat(value.toFixed(3)).toString();
   }
 
   public clear(): void {
@@ -100,10 +130,6 @@ export class Calclator {
       return this.result;
     }
 
-    if (this.operator !== null) {
-      return this.secondOperand || "0";
-    }
-
-    return "0";
+    return "";
   }
 }
