@@ -4,10 +4,45 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>hmi-calculator</title>
+    <title>Calculator</title>
   </head>
+
   <body>
-    <div id="app"></div>
+    <main class="calculator">
+      <section class="screen">
+        <div class="top"></div>
+        <div class="bottom"></div>
+      </section>
+
+      <div class="calculator-button">
+        <button type="button" class="btn number" id="decimal" data-value=".">
+          .
+        </button>
+        <button type="button" class="btn" id="clear" data-value="C">C</button>
+        <button type="button" class="btn operator" data-value="+">+</button>
+        <button type="button" class="btn" id="equal" data-value="=">=</button>
+
+        <button type="button" class="btn number" data-value="7">7</button>
+        <button type="button" class="btn number" data-value="8">8</button>
+        <button type="button" class="btn number" data-value="9">9</button>
+        <button type="button" class="btn operator" data-value="/">/</button>
+
+        <button type="button" class="btn number" data-value="4">4</button>
+        <button type="button" class="btn number" data-value="5">5</button>
+        <button type="button" class="btn number" data-value="6">6</button>
+        <button type="button" class="btn operator" data-value="×">×</button>
+
+        <button type="button" class="btn number" data-value="1">1</button>
+        <button type="button" class="btn number" data-value="2">2</button>
+        <button type="button" class="btn number" data-value="3">3</button>
+        <button type="button" class="btn operator" data-value="-">-</button>
+
+        <button type="button" class="btn number" id="zero" data-value="0">
+          0
+        </button>
+      </div>
+    </main>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
