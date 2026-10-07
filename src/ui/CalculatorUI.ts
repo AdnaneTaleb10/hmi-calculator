@@ -58,6 +58,10 @@ export class CalclatorUI {
       this.calculator.clear();
     }
 
+    if (value === "DEL") {
+      this.calculator.deleteLast();
+    }
+
     this.updateDisplay();
     this.handleInfinity();
   }

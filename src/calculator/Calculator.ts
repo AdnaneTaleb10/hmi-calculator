@@ -45,8 +45,8 @@ export class Calclator {
 
       this.firstOperand = this.result;
       this.secondOperand = "";
-      this.result = "";
       this.operator = operator;
+
     }
   }
 
@@ -111,6 +111,22 @@ export class Calclator {
     this.operator = null;
     this.secondOperand = "";
     this.result = "";
+  }
+
+  public deleteLast(): void {
+    if (this.secondOperand !== "") {
+      this.secondOperand = this.secondOperand.slice(0, -1);
+      return;
+    }
+
+    if (this.operator !== null) {
+      this.operator = null;
+      return;
+    }
+
+    if (this.firstOperand !== "") {
+      this.firstOperand = this.firstOperand.slice(0, -1);
+    }
   }
 
   public getOperationDisplay(): string {
