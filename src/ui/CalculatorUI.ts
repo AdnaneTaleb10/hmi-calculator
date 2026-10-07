@@ -67,14 +67,14 @@ export class CalclatorUI {
   }
 
   private handleInfinity(): void {
-    if (this.calculator.getDisplayValue() !== "Infinity") {
+    if (this.calculator.getDisplayValue() !== "Cannot divide by 0") {
       return;
     }
 
     setTimeout(() => {
       this.calculator.clear();
       this.updateDisplay();
-    }, 700);
+    }, 1000);
   }
 
   private playSound(): void {

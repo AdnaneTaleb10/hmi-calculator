@@ -46,7 +46,6 @@ export class Calclator {
       this.firstOperand = this.result;
       this.secondOperand = "";
       this.operator = operator;
-
     }
   }
 
@@ -84,7 +83,7 @@ export class Calclator {
 
       case "/":
         if (second === 0) {
-          this.result = "Infinity";
+          this.result = "Cannot divide by 0";
           return this.result;
         }
 
