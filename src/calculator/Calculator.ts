@@ -1,75 +1,109 @@
 import type { Operator } from "./types";
 
 export class Calclator {
-  private firstOperand: number | null = null;
+  private firstOperand = "";
   private operator: Operator | null = null;
-  private currentInput = "";
+  private secondOperand = "";
+  private result = "";
 
   public inputDigit(digit: string): void {
-    this.currentInput += digit;
-  }
-
-  public inputDecimal(): void {
-    if (!this.currentInput.includes(".")) {
-      this.currentInput += this.currentInput === "" ? "0." : ".";
+    if (this.operator === null) {
+      this.firstOperand += digit;
+    } else {
+      this.secondOperand += digit;
     }
   }
 
-  public setOperator(operator: Operator) {
-    this.firstOperand = Number(this.currentInput);
-    this.operator = operator;
-    this.currentInput = "";
+  public inputDecimal(): void {
+    if (this.operator === null) {
+      if (!this.firstOperand.includes(".")) {
+        this.firstOperand += this.firstOperand === "" ? "0." : ".";
+      }
+    } else {
+      if (!this.secondOperand.includes(".")) {
+        this.secondOperand += this.secondOperand === "" ? "0." : ".";
+      }
+    }
   }
 
-  public calculate(): number | string {
+  public setOperator(operator: Operator): void {
+    if (this.firstOperand !== "" && this.secondOperand === "") {
+      this.operator = operator;
+    }
+  }
+
+  public calculate(): string {
+    // If there is only one operand:
+    if (this.firstOperand !== "" && this.operator === null) {
+      this.result = this.firstOperand;
+      return this.result;
+    }
+
     if (
-      this.firstOperand === null ||
+      this.firstOperand === "" ||
       this.operator === null ||
-      this.currentInput === ""
+      this.secondOperand === ""
     ) {
       return "Error";
     }
 
-    const secondOperand = Number(this.currentInput);
-
-    if (this.operator === "/" && secondOperand === 0) {
-      return "Cannot divide by zero";
-    }
-
-    let result: number;
+    const first = parseFloat(this.firstOperand);
+    const second = parseFloat(this.secondOperand);
 
     switch (this.operator) {
       case "+":
-        result = this.firstOperand + secondOperand;
+        this.result = String(first + second);
         break;
 
       case "-":
-        result = this.firstOperand - secondOperand;
+        this.result = String(first - second);
         break;
 
       case "*":
-        result = this.firstOperand * secondOperand;
+        this.result = String(first * second);
         break;
 
       case "/":
-        result = this.firstOperand / secondOperand;
+        if (second === 0) {
+          this.result = "Cannot divide by zero";
+          return this.result;
+        }
+
+        this.result = String(first / second);
         break;
     }
 
-    this.currentInput = String(result);
-    this.firstOperand = null;
-    this.operator = null;
-
-    return result;
+    return this.result;
   }
 
   public clear(): void {
-    this.firstOperand = null;
+    this.firstOperand = "";
     this.operator = null;
-    this.currentInput = "";
+    this.secondOperand = "";
+    this.result = "";
+  }
+
+  public getOperationDisplay(): string {
+    if (this.operator === null) {
+      return this.firstOperand;
+    }
+
+    if (this.secondOperand === "") {
+      return `${this.firstOperand} ${this.operator}`;
+    }
+
+    return `${this.firstOperand} ${this.operator} ${this.secondOperand}`;
   }
 
   public getDisplayValue(): string {
-    return this.currentInput || "0";
+    if (this.result !== "") {
+      return this.result;
+    }
+
+    if (this.operator !== null) {
+      return this.secondOperand || "0";
+    }
+
+    return "0";
   }
 }
