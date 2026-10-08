@@ -99,11 +99,13 @@ export class Calclator {
     return this.result;
   }
 
-  private formatResult(value: number): string {
-    return Number.isInteger(value)
-      ? String(value)
-      : parseFloat(value.toFixed(3)).toString();
-  }
+private formatResult(value: number): string {
+  const result = Number.isInteger(value)
+    ? String(value)
+    : parseFloat(value.toFixed(3)).toString();
+
+  return result.length > 10 ? value.toExponential(3) : result;
+}
 
   public clear(): void {
     this.firstOperand = "";

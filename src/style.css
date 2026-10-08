@@ -70,7 +70,7 @@ a:hover {
   justify-content: space-between;
   padding: 10px;
   box-shadow: inset 0 0 10px #000;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .screen .top {
@@ -84,6 +84,25 @@ a:hover {
   font-weight: bold;
   color: #ebdbb2;
   text-align: right;
+}
+
+.screen::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.screen::-webkit-scrollbar-track {
+  background: #282828;
+  border-radius: 10px;
+}
+
+.screen::-webkit-scrollbar-thumb {
+  background: #b8bb26;
+  border-radius: 10px;
+}
+
+.screen::-webkit-scrollbar-thumb:hover {
+  background: #c0c531;
 }
 
 .calculator-button {
