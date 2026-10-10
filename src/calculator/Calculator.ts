@@ -1,152 +1,154 @@
 import type { Operator } from "./types";
 
 export class Calclator {
-  private firstOperand = "";
-  private operator: Operator | null = null;
-  private secondOperand = "";
+  private expression = "";
   private result = "";
 
   public inputDigit(digit: string): void {
-    if (this.operator === null) {
-      this.firstOperand += digit;
-    } else {
-      this.secondOperand += digit;
-    }
+    this.expression += digit;
+    this.result = "";
   }
 
   public inputDecimal(): void {
-    if (this.operator === null) {
-      if (!this.firstOperand.includes(".")) {
-        this.firstOperand += this.firstOperand === "" ? "0." : ".";
-      }
-    } else {
-      if (!this.secondOperand.includes(".")) {
-        this.secondOperand += this.secondOperand === "" ? "0." : ".";
-      }
+    const currentNumber = this.expression.split(/[+\-*/]/).pop() ?? "";
+
+    if (!currentNumber.includes(".")) {
+      this.expression += currentNumber === "" ? "0." : ".";
+      this.result = "";
     }
   }
 
   public setOperator(operator: Operator): void {
-    if (this.firstOperand !== "" && this.operator === null) {
-      this.operator = operator;
-      return;
+    if (this.expression === "") return;
+
+    const lastChar = this.expression.slice(-1);
+
+    if (/[+\-*/.]$/.test(lastChar)) {
+      this.expression = this.expression.slice(0, -1);
     }
 
-    if (
-      this.firstOperand !== "" &&
-      this.operator !== null &&
-      this.secondOperand !== ""
-    ) {
-      this.calculate();
-
-      if (this.result === "Infinity") {
-        return;
-      }
-
-      this.firstOperand = this.result;
-      this.secondOperand = "";
-      this.operator = operator;
-    }
+    this.expression += operator;
+    this.result = "";
   }
 
   public calculate(): string {
-    if (
-      this.firstOperand === "" ||
-      this.operator === null ||
-      this.secondOperand === ""
-    ) {
-      if (this.firstOperand !== "" && this.operator === null) {
-        this.result = this.firstOperand;
-        return this.result;
-      }
+    try {
+      const expression = this.expression.replace(/×/g, "*");
 
-      return "Error";
-    }
+      let position = 0;
 
-    const first = parseFloat(this.firstOperand);
-    const second = parseFloat(this.secondOperand);
+      const parseNumber = (): number => {
+        const start = position;
 
-    let calculation: number;
-
-    switch (this.operator) {
-      case "+":
-        calculation = first + second;
-        break;
-
-      case "-":
-        calculation = first - second;
-        break;
-
-      case "*":
-        calculation = first * second;
-        break;
-
-      case "/":
-        if (second === 0) {
-          this.result = "Cannot divide by 0";
-          return this.result;
+        while (
+          position < expression.length &&
+          /[\d.]/.test(expression[position])
+        ) {
+          position++;
         }
 
-        calculation = first / second;
-        break;
+        const numberText = expression.slice(start, position);
 
-      default:
+        if (!/^(?:\d+\.?\d*|\.\d+)$/.test(numberText)) {
+          throw new Error("Invalid number");
+        }
+
+        return Number(numberText);
+      };
+
+      const parseFactor = (): number => {
+        if (expression[position] === "-") {
+          position++;
+          return -parseFactor();
+        }
+
+        if (expression[position] === "+") {
+          position++;
+          return parseFactor();
+        }
+
+        return parseNumber();
+      };
+
+      const parseTerm = (): number => {
+        let value = parseFactor();
+
+        while (expression[position] === "*" || expression[position] === "/") {
+          const operator = expression[position++];
+          const next = parseFactor();
+
+          if (operator === "/") {
+            if (next === 0) {
+              throw new Error("Cannot divide by 0");
+            }
+
+            value /= next;
+          } else {
+            value *= next;
+          }
+        }
+
+        return value;
+      };
+
+      const parseExpression = (): number => {
+        let value = parseTerm();
+
+        while (expression[position] === "+" || expression[position] === "-") {
+          const operator = expression[position++];
+          const next = parseTerm();
+
+          value = operator === "+" ? value + next : value - next;
+        }
+
+        return value;
+      };
+
+      if (expression === "") {
         return "Error";
+      }
+
+      const calculation = parseExpression();
+
+      if (position !== expression.length || !Number.isFinite(calculation)) {
+        throw new Error("Invalid expression");
+      }
+
+      this.result = this.formatResult(calculation);
+      return this.result;
+    } catch (error) {
+      this.result =
+        error instanceof Error && error.message === "Cannot divide by 0"
+          ? "Cannot divide by 0"
+          : "Error";
+
+      return this.result;
     }
+  }
 
-    this.result = this.formatResult(calculation);
+  private formatResult(value: number): string {
+    const result = Number.isInteger(value)
+      ? String(value)
+      : parseFloat(value.toFixed(3)).toString();
 
+    return result.length > 10 ? value.toExponential(3) : result;
+  }
+
+  public getOperationDisplay(): string {
+    return this.expression;
+  }
+
+  public getDisplayValue(): string {
     return this.result;
   }
 
-private formatResult(value: number): string {
-  const result = Number.isInteger(value)
-    ? String(value)
-    : parseFloat(value.toFixed(3)).toString();
-
-  return result.length > 10 ? value.toExponential(3) : result;
-}
-
   public clear(): void {
-    this.firstOperand = "";
-    this.operator = null;
-    this.secondOperand = "";
+    this.expression = "";
     this.result = "";
   }
 
   public deleteLast(): void {
-    if (this.secondOperand !== "") {
-      this.secondOperand = this.secondOperand.slice(0, -1);
-      return;
-    }
-
-    if (this.operator !== null) {
-      this.operator = null;
-      return;
-    }
-
-    if (this.firstOperand !== "") {
-      this.firstOperand = this.firstOperand.slice(0, -1);
-    }
-  }
-
-  public getOperationDisplay(): string {
-    if (this.operator === null) {
-      return this.firstOperand;
-    }
-
-    if (this.secondOperand === "") {
-      return `${this.firstOperand} ${this.operator}`;
-    }
-
-    return `${this.firstOperand} ${this.operator} ${this.secondOperand}`;
-  }
-
-  public getDisplayValue(): string {
-    if (this.result !== "") {
-      return this.result;
-    }
-
-    return "";
+    this.expression = this.expression.slice(0, -1);
+    this.result = "";
   }
 }
