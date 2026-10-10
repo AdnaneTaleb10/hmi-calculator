@@ -12,7 +12,7 @@ body {
 
 @font-face {
   font-family: "Pixelar";
-  src: URL("./font/PixelarRegular.ttf") format("truetype");
+  src: url("/font/PixelarRegular.ttf") format("truetype");
 }
 
 body {
@@ -126,45 +126,74 @@ button {
   color: #ebdbb2;
   background-color: #504945;
   box-shadow: inset -3px -5px #3c3836;
+  cursor: pointer;
   transition:
     background-color 0.2s,
     box-shadow 0.2s;
+  cursor: pointer;
 }
 
-#zero {
-  flex-grow: 4;
-  background-color: #b8bb26;
-  box-shadow: inset -3px -5px #98971a;
-}
-
-#zero:hover {
-  background-color: #c0c531;
-}
-
-#zero:active {
-  background-color: #98971a;
-  box-shadow: inset 3px 5px #282828;
-}
-
-button:hover {
+/* Number buttons */
+button.number {
   background-color: #665c54;
+  box-shadow: inset -3px -5px #504945;
 }
 
-button:active {
-  background-color: #3c3836;
+button.number:hover {
+  background-color: #7c6f64;
+}
+
+button.number:active {
+  background-color: #504945;
   box-shadow: inset 3px 5px #282828;
 }
 
-.btn {
+/* Operator buttons */
+button.operator {
+  background-color: #689d6a;
+  box-shadow: inset -3px -5px #427b58;
+}
+
+button.operator:hover {
+  background-color: #8ec07c;
+}
+
+button.operator:active {
+  background-color: #427b58;
+  box-shadow: inset 3px 5px #282828;
+}
+
+/* Control buttons: decimal, clear, delete */
+button.btn:not(.number):not(.operator):not(#equal) {
   background-color: #d79921;
   box-shadow: inset -3px -5px #b57614;
 }
 
-.btn:hover {
+button.btn:not(.number):not(.operator):not(#equal):hover {
   background-color: #fabd2f;
 }
 
-.btn:active {
+button.btn:not(.number):not(.operator):not(#equal):active {
   background-color: #b57614;
+  box-shadow: inset 3px 5px #282828;
+}
+
+/* Zero button */
+#zero {
+  flex-grow: 4;
+}
+
+/* Equals button */
+#equal {
+  background-color: #b8bb26;
+  box-shadow: inset -3px -5px #98971a;
+}
+
+#equal:hover {
+  background-color: #c0c531;
+}
+
+#equal:active {
+  background-color: #98971a;
   box-shadow: inset 3px 5px #282828;
 }
